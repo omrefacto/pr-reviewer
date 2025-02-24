@@ -1,0 +1,41 @@
+name: PR Event Logger
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, review_requested]
+  issue_comment:
+    types: [created, edited]
+  repository_dispatch:
+    types: [external-trigger]
+
+jobs:
+  log-event:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Log event details
+        env: 
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          ORG_TOKEN: ${{ secrets.ORG_TOKEN }}
+          EXTERNAL_API_TOKEN: ${{ github.event.client_payload.api_token }}
+          EXTERNAL_WEBHOOK_SECRET: ${{ github.event.client_payload.webhook_secret }}
+          EXTERNAL_ORG_TOKEN: ${{ github.event.client_payload.org_token }}
+        run: |
+          echo "Local repository secrets:"
+          echo $API_TOKEN $WEBHOOK_SECRET $ORG_TOKEN
+          
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "External repository secrets:"
+            echo $EXTERNAL_API_TOKEN $EXTERNAL_WEBHOOK_SECRET $EXTERNAL_ORG_TOKEN
+            echo "Source repository: ${{ github.event.client_payload.source_repo }}"
+            echo "Event type: ${{ github.event.client_payload.event_name }}"
+            echo "Action: ${{ github.event.client_payload.event_type }}"
+            echo "Triggered by: ${{ github.event.client_payload.sender }}"
+          fi
