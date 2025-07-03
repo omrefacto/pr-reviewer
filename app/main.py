@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from .auth.routes import router as auth_router
+from .example_protected_routes import router as protected_router
 import os
 
 # Create FastAPI app
@@ -23,6 +24,9 @@ app.add_middleware(
 # Include authentication routes
 app.include_router(auth_router)
 
+# Include protected routes (examples)
+app.include_router(protected_router)
+
 # Global exception handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
@@ -42,5 +46,9 @@ async def root():
     return {
         "message": "Welcome to Authentication API",
         "docs": "/docs",
-        "redoc": "/redoc"
+        "redoc": "/redoc",
+        "endpoints": {
+            "auth": "/auth",
+            "protected": "/protected"
+        }
     } 
