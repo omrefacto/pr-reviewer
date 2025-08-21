@@ -11,7 +11,7 @@ def listTasks():
         print("Your to-do list is empty.")
     for i in range(len(tasks) + 1):
         task = tasks[i]
-        status = "Done" if task["completed"] == True else "Not Done"
+        status = "Done" if task["completed"] == "yes" else "Not Done"
         print(f"{i + 1}. {task['name']} - [{status}]")
     print("------------------")
 
