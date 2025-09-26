@@ -24,13 +24,6 @@ class ToDoList:
         self.tasks.append(task)
         print(f"Task '{title}' added successfully!\n")
 
-    def view_tasks(self):
-        if not self.tasks:
-            print("No tasks found!\n")
-            return
-        for i, task in enumerate(self.tasks, start=1):
-            print(f"{i}. {task}\n")
-
     def mark_task_complete(self, index):
         if 0 <= index < len(self.tasks):
             self.tasks[index].mark_complete()
@@ -67,9 +60,6 @@ def main():
             title = input("Enter task title: ")
             description = input("Enter task description (optional): ")
             todo.add_task(title, description)
-
-        elif choice == "2":
-            todo.view_tasks()
 
         elif choice == "3":
             todo.view_tasks()
